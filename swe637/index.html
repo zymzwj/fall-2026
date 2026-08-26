@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SWE 637 Semester Planner</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F6F8F5;--surface:#FFFFFF;--ink:#1B2420;--muted:#5E6A63;--line:#D8DFD9;--soft:#EDF2EE;
+  --accent:#1F6B3A;--accent-ink:#FFFFFF;--gold:#B8901E;--gold-soft:#FBF3DC;
+  --quiz:#1F6B3A;--hw:#B8901E;--exam:#A6362B;--post:#3F5F9A;--today:#E8F1EA;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111815;--surface:#182019;--ink:#E5EBE6;--muted:#97A39B;--line:#2A342D;--soft:#1F2A23;
+  --accent:#63C186;--accent-ink:#0E1A12;--gold:#E0B84A;--gold-soft:#2C2612;
+  --quiz:#63C186;--hw:#E0B84A;--exam:#F08A7C;--post:#8FB0E8;--today:#1C2E22;
+}}
+:root[data-theme="dark"]{
+  --bg:#111815;--surface:#182019;--ink:#E5EBE6;--muted:#97A39B;--line:#2A342D;--soft:#1F2A23;
+  --accent:#63C186;--accent-ink:#0E1A12;--gold:#E0B84A;--gold-soft:#2C2612;
+  --quiz:#63C186;--hw:#E0B84A;--exam:#F08A7C;--post:#8FB0E8;--today:#1C2E22;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px}
+h1{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,48px);line-height:1.05;margin:0 0 6px;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 28px}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+.now{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px}
+@media(max-width:640px){.now{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+.card h2{font-family:"Newsreader",Georgia,serif;font-weight:600;font-size:20px;margin:6px 0 10px}
+.card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.card li{display:flex;gap:10px;align-items:baseline}
+.card li .d{color:var(--muted);font-size:13px;min-width:88px}
+.empty{color:var(--muted)}
+
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
+@media(max-width:640px){.rules{grid-template-columns:1fr}}
+.rule{border-top:2px solid var(--accent);padding-top:10px}
+.rule b{display:block;font-size:26px;font-family:"Newsreader",Georgia,serif;font-weight:600;line-height:1.1}
+.rule span{color:var(--muted);font-size:13px}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 18px;font-size:13px;color:var(--muted)}
+.chip{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;line-height:1.5;border:1px solid currentColor;min-width:52px;text-align:center}
+.t-quiz{color:var(--quiz)} .t-hw{color:var(--hw)} .t-exam{color:var(--exam)} .t-post,.t-reply{color:var(--post)} .t-admin{color:var(--muted)}
+.chip.t-quiz,.chip.t-hw,.chip.t-exam{background:currentColor}
+.chip.t-quiz,.chip.t-hw,.chip.t-exam{color:var(--surface)}
+.chip.t-quiz{background:var(--quiz);border-color:var(--quiz)} .chip.t-hw{background:var(--hw);border-color:var(--hw)} .chip.t-exam{background:var(--exam);border-color:var(--exam)}
+
+.mod{display:grid;grid-template-columns:150px 1fr;gap:0 24px;padding:18px 0;border-top:1px solid var(--line)}
+.mod:last-child{border-bottom:1px solid var(--line)}
+.mod.past{opacity:.55}
+.mod.current{background:var(--today);margin:0 -16px;padding:18px 16px;border-radius:6px;border-top-color:transparent}
+.mod.current + .mod{border-top-color:transparent}
+@media(max-width:640px){.mod{grid-template-columns:1fr;gap:8px}}
+.when .n{font-family:"Newsreader",Georgia,serif;font-size:22px;font-weight:600;line-height:1}
+.when .n small{font-size:12px;font-family:"Public Sans",sans-serif;font-weight:600;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:4px}
+.when .range{color:var(--muted);font-size:12.5px;margin-top:6px}
+.mod h3{margin:0 0 10px;font-size:17px;font-weight:600;line-height:1.25}
+.items{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.items li{display:grid;grid-template-columns:96px 58px 1fr;gap:10px;align-items:baseline;font-size:14px}
+@media(max-width:640px){.items li{grid-template-columns:82px 54px 1fr;gap:8px}}
+.items .d{color:var(--muted);font-size:12.5px}
+.items .note{color:var(--muted);font-size:12.5px}
+.items li.key .name{font-weight:600}
+.items li.optional{opacity:.6}
+.nothing{color:var(--muted);font-style:italic;font-size:14px}
+
+.big{margin:44px 0 0}
+.big table{width:100%;border-collapse:collapse;font-size:14px}
+.big th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
+.big td{padding:9px 8px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.big td.w{text-align:right}
+.tblwrap{overflow-x:auto}
+.foot{margin-top:40px;color:var(--muted);font-size:13px;max-width:65ch}
+.foot p{margin:0 0 8px}
+a{color:var(--accent)}
+.zh{display:block;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-weight:500;font-size:.8em;color:var(--muted);margin-top:2px}
+.zh-h1{display:block;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-weight:500;font-size:.5em;color:var(--muted);margin-top:6px;letter-spacing:.02em}
+.card h2 .zh{display:inline;font-size:.75em;margin-left:6px}
+.br{display:block;content:"";margin-top:4px}
+@media (prefers-reduced-motion:no-preference){.mod{transition:opacity .2s}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <div class="eyebrow">George Mason · Fall 2026 · Section 002/DL1 · Dr. Bob Kurtz</div>
+  <h1>SWE 637 Semester Planner <span class="zh-h1">软件测试 · 学期计划</span></h1>
+  <p class="sub">Aug 24 – Dec 6, 2026 · 15 modules · everything due 11:59 PM ET<br>2026 年 8 月 24 日 – 12 月 6 日 · 15 个模块 · 所有截止时间均为美东 11:59 PM</p>
+
+  <div class="now">
+    <div class="card"><div class="eyebrow" id="todayLabel">Today</div><h2>Due this week <span class="zh">本周要交</span></h2><ul id="thisWeek"></ul></div>
+    <div class="card"><div class="eyebrow">Coming up · 接下来</div><h2>Next graded deadline <span class="zh">下一个计分截止</span></h2><ul id="nextUp"></ul></div>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><b>50%</b><span>13 weekly quizzes, best 10 count. No retakes, no makeups. ~45 min, open book, solo.<br class="br">每周测验共 13 次，取最高 10 次。不能补考重考。约 45 分钟，开卷，独立完成。</span></div>
+    <div class="rule"><b>25%</b><span>6 homework assignments, 1–4 person teams. Late: −10%/day, zero after 5 days.<br class="br">作业 6 次，可 1–4 人组队。迟交每天扣 10%，超过 5 天为 0 分。</span></div>
+    <div class="rule"><b>25%</b><span>Final exam, cumulative, open book, solo. Due Fri Dec 11. No midterm.<br class="br">期末考试，覆盖全部内容，开卷，独立完成。12 月 11 日（周五）截止。没有期中。</span></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="chip t-quiz">Quiz</span> 测验 · Sunday 周日</span>
+    <span><span class="chip t-hw">HW</span> 作业 · graded 计分</span>
+    <span><span class="chip t-exam">Exam</span> 期末</span>
+    <span><span class="chip t-post">Post</span> 讨论首帖 · Wednesday 周三</span>
+    <span><span class="chip t-reply">Reply</span> 回复 · Friday 周五 · 未标注即为可选</span>
+  </div>
+
+  <div id="modules"></div>
+
+  <section class="big">
+    <div class="eyebrow">Graded work only · 仅计分作业与考试</div>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Due 截止</th><th>Assignment 作业</th><th>Module 模块</th><th class="w">Weight 权重</th></tr></thead>
+      <tbody id="bigTable"></tbody>
+    </table></div>
+  </section>
+
+  <div class="foot">
+    <p>Sept 7–20 is the densest stretch: two assignments and two quizzes back to back. Assignment 6 is the only one due on a Wednesday (Dec 2). Module 14 (Thanksgiving week) has no quiz, so three quiz drops come out of 13. The final is due Dec 11, after the course's nominal end date.</p><p>9 月 7 日–20 日是最密的一段：两次作业和两次测验连着来。作业 6 是唯一周三截止的（12 月 2 日）。模块 14（感恩节周）没有测验，所以 13 次里去掉最低 3 次。期末 12 月 11 日截止，比课程名义结束日晚。</p>
+    <p>Quiz tip from the syllabus: check that Canvas recorded every answer immediately after submitting, and email the professor or GTA right away if it didn't.</p><p>大纲里的提醒：测验提交后立刻检查 Canvas 是否记录了所有答案，若有问题马上邮件联系教授或 GTA。</p>
+  </div>
+</div>
+
+<script>
+const DATA = [{"m": 1, "start": "2026-08-24", "title": "Why Test? Faults, Failures, and Errors", "zh": "为什么要测试？故障、失效与错误", "items": [{"t": "post", "n": "Discussion 1 – Introductions", "d": "2026-08-26", "note": "first post"}, {"t": "post", "n": "Discussion 2 – Software Failures in the News", "d": "2026-08-26", "note": "first post"}, {"t": "post", "n": "Discussion 3 – Faults, Errors, and Failures", "d": "2026-08-26", "note": "first post"}, {"t": "admin", "n": "Syllabus & Course Format Acknowledgement", "d": "2026-08-26", "note": ""}, {"t": "reply", "n": "Discussion 1 – reply to 1 peer", "d": "2026-08-28", "note": "required"}, {"t": "reply", "n": "Discussion 2 – reply to 1 peer", "d": "2026-08-28", "note": "required"}, {"t": "reply", "n": "Discussion 3 – replies", "d": "2026-08-28", "note": "optional"}, {"t": "quiz", "n": "Module 1 Quiz", "d": "2026-08-30", "note": ""}]}, {"m": 2, "start": "2026-08-31", "title": "The RIPR Model; Model-Driven Test Design", "zh": "RIPR 模型；模型驱动的测试设计", "items": [{"t": "post", "n": "Discussion 1 – Practice Applying the RIPR Model", "d": "2026-09-02", "note": "first post"}, {"t": "post", "n": "Discussion 2 – Influences on Software Testing", "d": "2026-09-02", "note": "first post"}, {"t": "reply", "n": "Discussion 1 – replies", "d": "2026-09-04", "note": "optional"}, {"t": "reply", "n": "Discussion 2 – reply to 1 peer", "d": "2026-09-04", "note": "required"}, {"t": "quiz", "n": "Module 2 Quiz", "d": "2026-09-06", "note": ""}]}, {"m": 3, "start": "2026-09-07", "title": "Test Automation", "zh": "测试自动化", "items": [{"t": "post", "n": "Discussion 1 – Practicing JUnit Tests", "d": "2026-09-09", "note": "first post"}, {"t": "post", "n": "Discussion 2 – Practicing Cucumber Tests", "d": "2026-09-09", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-09-11", "note": "optional"}, {"t": "hw", "n": "Assignment 1 – Writing JUnit Tests", "d": "2026-09-13", "note": "2% of grade"}, {"t": "quiz", "n": "Module 3 Quiz", "d": "2026-09-13", "note": ""}]}, {"m": 4, "start": "2026-09-14", "title": "Agile Testing, Coverage Criteria, and Test Doubles", "zh": "敏捷测试、覆盖准则与测试替身", "items": [{"t": "post", "n": "Discussion – Using Test Doubles", "d": "2026-09-16", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-09-18", "note": "optional"}, {"t": "hw", "n": "Assignment 2 – RankingService Test Doubles", "d": "2026-09-20", "note": "3% of grade"}, {"t": "quiz", "n": "Module 4 Quiz", "d": "2026-09-20", "note": ""}]}, {"m": 5, "start": "2026-09-21", "title": "Input Space Coverage, Part 1", "zh": "输入空间覆盖（一）", "items": [{"t": "post", "n": "Discussion – Input Space Coverage Exercise", "d": "2026-09-23", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-09-25", "note": "optional"}, {"t": "quiz", "n": "Module 5 Quiz", "d": "2026-09-27", "note": ""}]}, {"m": 6, "start": "2026-09-28", "title": "More Input Space Coverage", "zh": "输入空间覆盖（二）", "items": [{"t": "hw", "n": "Assignment 3 – CalMutants Input Space Partitioning", "d": "2026-10-04", "note": "4% of grade"}, {"t": "quiz", "n": "Module 6 Quiz", "d": "2026-10-04", "note": ""}]}, {"m": 7, "start": "2026-10-05", "title": "Graph Coverage", "zh": "图覆盖", "items": [{"t": "post", "n": "Discussion – Graph Coverage Exercise", "d": "2026-10-07", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-10-09", "note": "optional"}, {"t": "quiz", "n": "Module 7 Quiz", "d": "2026-10-11", "note": ""}]}, {"m": 8, "start": "2026-10-12", "title": "More Graph Coverage", "zh": "图覆盖（续）", "items": [{"t": "post", "n": "Discussion – Data Flow Exercise", "d": "2026-10-14", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-10-16", "note": "optional"}, {"t": "hw", "n": "Assignment 4 – LinkedList Statement Coverage", "d": "2026-10-18", "note": "5% of grade"}, {"t": "quiz", "n": "Module 8 Quiz", "d": "2026-10-18", "note": ""}]}, {"m": 9, "start": "2026-10-19", "title": "Semantic Logic Coverage", "zh": "语义逻辑覆盖", "items": [{"t": "post", "n": "Discussion – Active and Inactive Clause Examples", "d": "2026-10-21", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-10-23", "note": "optional"}, {"t": "quiz", "n": "Module 9 Quiz", "d": "2026-10-25", "note": ""}]}, {"m": 10, "start": "2026-10-26", "title": "Syntactic Logic Coverage", "zh": "语法逻辑覆盖", "items": [{"t": "post", "n": "Discussion – Syntactic Logic Examples", "d": "2026-10-28", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-10-30", "note": "optional"}, {"t": "quiz", "n": "Module 10 Quiz", "d": "2026-11-01", "note": ""}]}, {"m": 11, "start": "2026-11-02", "title": "Applying Logic Criteria", "zh": "应用逻辑准则", "items": [{"t": "hw", "n": "Assignment 5 – Testing the 737 MAX MCAS System", "d": "2026-11-08", "note": "7% of grade"}, {"t": "quiz", "n": "Module 11 Quiz", "d": "2026-11-08", "note": ""}]}, {"m": 12, "start": "2026-11-09", "title": "Syntax-Based Testing", "zh": "基于语法的测试", "items": [{"t": "post", "n": "Discussion – Killing Mutants", "d": "2026-11-11", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-11-13", "note": "optional"}, {"t": "quiz", "n": "Module 12 Quiz", "d": "2026-11-15", "note": ""}]}, {"m": 13, "start": "2026-11-16", "title": "Mutation Testing", "zh": "变异测试", "items": [{"t": "post", "n": "Discussion – Assessing Mutants", "d": "2026-11-18", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-11-20", "note": "optional"}, {"t": "quiz", "n": "Module 13 Quiz", "d": "2026-11-22", "note": ""}]}, {"m": 14, "start": "2026-11-23", "title": "Software Testing Literature Review", "zh": "软件测试文献综述", "items": [{"t": "hw", "n": "Assignment 6 – Software Testing Literature Review", "d": "2026-12-02", "note": "4% of grade · Wednesday, not Sunday"}]}, {"m": 15, "start": "2026-11-30", "title": "Final Exam", "zh": "期末考试", "items": [{"t": "post", "n": "Discussion – Final Exam Preparation", "d": "2026-12-02", "note": "first post"}, {"t": "reply", "n": "Discussion replies", "d": "2026-12-04", "note": "optional"}, {"t": "exam", "n": "Final Exam", "d": "2026-12-11", "note": "25% of grade · open book, individual"}]}];
+const TYPE = {post:"Post",reply:"Reply",admin:"Admin",quiz:"Quiz",hw:"HW",exam:"Exam"};
+const TYPEZH = {post:"讨论",reply:"回复",admin:"确认",quiz:"测验",hw:"作业",exam:"期末"};
+const NOTEZH = {"first post":"首帖","required":"必须","optional":"可选","2% of grade":"占 2%","3% of grade":"占 3%","4% of grade":"占 4%","5% of grade":"占 5%","7% of grade":"占 7%","4% of grade · Wednesday, not Sunday":"占 4% · 周三截止，不是周日","25% of grade · open book, individual":"占 25% · 开卷，独立完成"};
+const DAYZH = ["周日","周一","周二","周三","周四","周五","周六"];
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const p = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const fmt = s => { const d=p(s); return `${DAYS[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`; };
+const short = s => { const d=p(s); return `${MON[d.getMonth()]} ${d.getDate()}`; };
+const today = new Date(); today.setHours(0,0,0,0);
+const iso = d => d.toISOString().slice(0,10);
+const todayS = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+
+// Header
+document.getElementById("todayLabel").textContent = "Today 今天 · " + fmt(todayS) + " " + DAYZH[today.getDay()];
+
+// Modules
+const modsEl = document.getElementById("modules");
+DATA.forEach((m,i) => {
+  const start = p(m.start); const end = new Date(start); end.setDate(end.getDate()+6);
+  const endS = i===DATA.length-1 ? "2026-12-11" : null;
+  const state = (today>=start && today<=end) ? "current" : (today>end ? "past" : "");
+  const items = m.items.map(it => {
+    const big = ["quiz","hw","exam"].includes(it.t);
+    const opt = it.t==="reply" && it.note==="optional";
+    return `<li class="${big?"key":""} ${opt?"optional":""}">
+      <span class="d mono">${fmt(it.d)}</span>
+      <span class="chip t-${it.t}">${TYPE[it.t]}</span>
+      <span><span class="name">${it.n}</span> <span class="note">${TYPEZH[it.t]}${it.note&&!opt?` · ${NOTEZH[it.note]||it.note}`:""}</span></span></li>`;
+  }).join("");
+  modsEl.insertAdjacentHTML("beforeend", `
+    <div class="mod ${state}">
+      <div class="when"><div class="n"><small>Module 模块</small>${m.m}</div>
+        <div class="range mono">${short(m.start)} – ${endS?short(endS):short(iso(new Date(end.getTime()-end.getTimezoneOffset()*60000)))}</div></div>
+      <div><h3>${m.title}<span class="zh">${m.zh}</span></h3><ul class="items">${items}</ul></div>
+    </div>`);
+});
+
+// Flat list of all items
+const all = DATA.flatMap(m => m.items.map(it => ({...it, mod:m.m, mtitle:m.title, mzh:m.zh})))
+  .sort((a,b)=>a.d.localeCompare(b.d));
+
+// This week: today through next Sunday
+const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate() + ((7 - today.getDay()) % 7));
+const weekEndS = `${weekEnd.getFullYear()}-${String(weekEnd.getMonth()+1).padStart(2,"0")}-${String(weekEnd.getDate()).padStart(2,"0")}`;
+const wk = all.filter(it => it.d >= todayS && it.d <= weekEndS && !(it.t==="reply"&&it.note==="optional"));
+const wkEl = document.getElementById("thisWeek");
+wkEl.innerHTML = wk.length ? wk.map(it => `<li><span class="d mono">${fmt(it.d)}</span><span class="chip t-${it.t}">${TYPE[it.t]}</span><span>${it.n}</span></li>`).join("")
+  : `<li class="empty">Nothing due before Sunday. 周日前没有要交的。</li>`;
+
+// Next graded
+const graded = all.filter(it => ["quiz","hw","exam"].includes(it.t) && it.d >= todayS);
+const nx = graded.slice(0,3);
+document.getElementById("nextUp").innerHTML = nx.length ? nx.map(it => {
+  const days = Math.round((p(it.d)-today)/86400000);
+  return `<li><span class="d mono">${fmt(it.d)}</span><span class="chip t-${it.t}">${TYPE[it.t]}</span><span>${it.n} <span class="note" style="color:var(--muted);font-size:12.5px">· ${days===0?"today 今天":days===1?"tomorrow 明天":"in "+days+" days · 还有 "+days+" 天"}</span></span></li>`;
+}).join("") : `<li class="empty">Semester complete. 学期结束。</li>`;
+
+// Big table
+document.getElementById("bigTable").innerHTML = all.filter(it => ["hw","exam"].includes(it.t)).map(it =>
+  `<tr><td class="mono">${fmt(it.d)}</td><td>${it.n}</td><td>${it.mod} · ${it.mtitle}<br><span class="note">${it.mzh}</span></td><td class="w mono">${it.note.split(" ")[0]}</td></tr>`).join("");
+</script>
+
+</body>
+</html>
