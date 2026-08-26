@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fall 2026 Courses</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F6F8F5;--surface:#FFFFFF;--ink:#1B2420;--muted:#5E6A63;--line:#D8DFD9;--accent:#1F6B3A;
+  --quiz:#1F6B3A;--hw:#B8901E;--exam:#A6362B;--post:#3F5F9A;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#111815;--surface:#182019;--ink:#E5EBE6;--muted:#97A39B;--line:#2A342D;--accent:#63C186;
+  --quiz:#63C186;--hw:#E0B84A;--exam:#F08A7C;--post:#8FB0E8;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
+h1{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,46px);line-height:1.05;margin:0 0 4px}
+.zh{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-weight:500;color:var(--muted)}
+h1 .zh{display:block;font-size:.5em;margin-top:6px}
+.sub{color:var(--muted);margin:0 0 28px}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 20px;margin-bottom:28px}
+.card h2{font-family:"Newsreader",Georgia,serif;font-weight:600;font-size:20px;margin:6px 0 10px}
+.card h2 .zh{font-size:.75em;margin-left:6px}
+.card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.card li{display:grid;grid-template-columns:96px 58px 1fr;gap:10px;align-items:baseline}
+.card li .d{color:var(--muted);font-size:13px}
+.card li .c{color:var(--muted);font-size:12.5px}
+.empty{color:var(--muted)}
+.chip{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;line-height:1.5;border:1px solid currentColor;min-width:52px;text-align:center}
+.t-post,.t-reply{color:var(--post)} .t-admin{color:var(--muted)}
+.chip.t-quiz{background:var(--quiz);border-color:var(--quiz);color:var(--surface)}
+.chip.t-hw{background:var(--hw);border-color:var(--hw);color:var(--surface)}
+.chip.t-exam{background:var(--exam);border-color:var(--exam);color:var(--surface)}
+.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+a.course{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:6px;padding:16px 18px}
+a.course:hover,a.course:focus-visible{border-color:var(--accent);outline:none}
+a.course .code{font-family:"Newsreader",Georgia,serif;font-size:24px;font-weight:600;line-height:1.1}
+a.course .name{margin-top:2px}
+a.course .meta{color:var(--muted);font-size:12.5px;margin-top:8px}
+.foot{margin-top:36px;color:var(--muted);font-size:13px;max-width:65ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">George Mason · M.S. in Software Engineering</div>
+  <h1>Fall 2026 <span class="zh">2026 秋季学期 · 课程总览</span></h1>
+  <p class="sub" id="todayLabel"></p>
+
+  <div class="card">
+    <div class="eyebrow">All courses · 全部课程</div>
+    <h2>Due in the next 7 days <span class="zh">未来 7 天要交</span></h2>
+    <ul id="week"><li class="empty">Loading…</li></ul>
+  </div>
+
+  <div class="eyebrow" style="margin-bottom:10px">Courses · 课程</div>
+  <div class="courses" id="courses"></div>
+
+  <p class="foot">Each course page lists every module and deadline and highlights the current week. Add a course by adding a folder with <span class="mono">index.html</span> and <span class="mono">data.json</span>, then registering it in the COURSES list on this page.<br>每门课一个文件夹，含 index.html 和 data.json；新加课程只需在本页的 COURSES 列表里登记。</p>
+</div>
+
+<script>
+const COURSES = [
+  {code:"SWE 637", name:"Software Testing", zh:"软件测试", dir:"swe637", meta:"Section 002/DL1 · Dr. Bob Kurtz"},
+];
+const TYPE = {post:"Post",reply:"Reply",admin:"Admin",quiz:"Quiz",hw:"HW",exam:"Exam"};
+const TYPEZH = {post:"讨论",reply:"回复",admin:"确认",quiz:"测验",hw:"作业",exam:"期末"};
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], DAYZH=["周日","周一","周二","周三","周四","周五","周六"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const p = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const fmt = s => { const d=p(s); return `${DAYS[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`; };
+const today = new Date(); today.setHours(0,0,0,0);
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const todayS = ymd(today);
+const end = new Date(today); end.setDate(end.getDate()+7); const endS = ymd(end);
+document.getElementById("todayLabel").textContent = `Today 今天 · ${fmt(todayS)} ${DAYZH[today.getDay()]}`;
+
+document.getElementById("courses").innerHTML = COURSES.map(c => `
+  <a class="course" href="${c.dir}/">
+    <div class="code">${c.code}</div>
+    <div class="name">${c.name} <span class="zh">${c.zh}</span></div>
+    <div class="meta">${c.meta}</div>
+  </a>`).join("");
+
+(async () => {
+  const rows = [];
+  for (const c of COURSES) {
+    try {
+      const data = await fetch(`${c.dir}/data.json`).then(r => r.json());
+      for (const m of data) for (const it of m.items) {
+        if (it.t==="reply" && it.note==="optional") continue;
+        if (it.d >= todayS && it.d <= endS) rows.push({...it, course:c.code});
+      }
+    } catch (e) { rows.push({t:"admin", n:`Could not load ${c.dir}/data.json`, d:todayS, course:c.code}); }
+  }
+  rows.sort((a,b)=>a.d.localeCompare(b.d) || a.course.localeCompare(b.course));
+  document.getElementById("week").innerHTML = rows.length
+    ? rows.map(it => `<li><span class="d mono">${fmt(it.d)}</span><span class="chip t-${it.t}">${TYPE[it.t]}</span><span>${it.n} <span class="c">· ${it.course} · ${TYPEZH[it.t]}</span></span></li>`).join("")
+    : `<li class="empty">Nothing due in the next 7 days. 未来 7 天没有要交的。</li>`;
+})();
+</script>
+</body>
+</html>
