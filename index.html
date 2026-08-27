@@ -32,7 +32,7 @@ h1 .zh{display:block;font-size:.5em;margin-top:6px}
 .card li .c{color:var(--muted);font-size:12.5px}
 .empty{color:var(--muted)}
 .chip{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;line-height:1.5;border:1px solid currentColor;min-width:52px;text-align:center}
-.t-post,.t-reply{color:var(--post)} .t-admin{color:var(--muted)}
+.t-post,.t-reply{color:var(--post)} .t-admin,.t-off{color:var(--muted)} .t-class{color:var(--accent)}
 .chip.t-quiz{background:var(--quiz);border-color:var(--quiz);color:var(--surface)}
 .chip.t-hw{background:var(--hw);border-color:var(--hw);color:var(--surface)}
 .chip.t-exam{background:var(--exam);border-color:var(--exam);color:var(--surface)}
@@ -66,9 +66,10 @@ a.course .meta{color:var(--muted);font-size:12.5px;margin-top:8px}
 <script>
 const COURSES = [
   {code:"SWE 637", name:"Software Testing", zh:"软件测试", dir:"swe637", meta:"Section 002/DL1 · Dr. Bob Kurtz"},
+  {code:"ECE 542", name:"Computer Network Architecture and Protocols", zh:"计算机网络体系结构与协议", dir:"ece542", meta:"Mon 7:20 PM · Section 001/DL1 · Dr. Sean Yun"},
 ];
-const TYPE = {post:"Post",reply:"Reply",admin:"Admin",quiz:"Quiz",hw:"HW",exam:"Exam"};
-const TYPEZH = {post:"讨论",reply:"回复",admin:"确认",quiz:"测验",hw:"作业",exam:"期末"};
+const TYPE = {post:"Post",reply:"Reply",admin:"Admin",quiz:"Quiz",hw:"HW",exam:"Exam",class:"Class",off:"—"};
+const TYPEZH = {post:"讨论",reply:"回复",admin:"确认",quiz:"测验",hw:"作业",exam:"考试",class:"上课",off:"停课"};
 const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], DAYZH=["周日","周一","周二","周三","周四","周五","周六"];
 const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const p = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
