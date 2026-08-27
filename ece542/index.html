@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECE 542 Semester Planner</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F6F8F5;--surface:#FFFFFF;--ink:#1B2420;--muted:#5E6A63;--line:#D8DFD9;--soft:#EDF2EE;
+  --accent:#2B5D9B;--accent-ink:#FFFFFF;--gold:#B8901E;--gold-soft:#FBF3DC;
+  --class:#2B5D9B;--hw:#B8901E;--exam:#A6362B;--post:#3F5F9A;--today:#E9EFF7;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111815;--surface:#182019;--ink:#E5EBE6;--muted:#97A39B;--line:#2A342D;--soft:#1F2A23;
+  --accent:#7FAEE0;--accent-ink:#0E1A12;--gold:#E0B84A;--gold-soft:#2C2612;
+  --class:#7FAEE0;--hw:#E0B84A;--exam:#F08A7C;--post:#8FB0E8;--today:#1B2634;
+}}
+:root[data-theme="dark"]{
+  --bg:#111815;--surface:#182019;--ink:#E5EBE6;--muted:#97A39B;--line:#2A342D;--soft:#1F2A23;
+  --accent:#7FAEE0;--accent-ink:#0E1A12;--gold:#E0B84A;--gold-soft:#2C2612;
+  --class:#7FAEE0;--hw:#E0B84A;--exam:#F08A7C;--post:#8FB0E8;--today:#1B2634;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px}
+h1{font-family:"Newsreader",Georgia,serif;font-weight:500;font-size:clamp(34px,5vw,48px);line-height:1.05;margin:0 0 6px;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 28px}
+.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+.now{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:36px}
+@media(max-width:640px){.now{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+.card h2{font-family:"Newsreader",Georgia,serif;font-weight:600;font-size:20px;margin:6px 0 10px}
+.card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.card li{display:flex;gap:10px;align-items:baseline}
+.card li .d{color:var(--muted);font-size:13px;min-width:88px}
+.empty{color:var(--muted)}
+
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
+@media(max-width:640px){.rules{grid-template-columns:1fr}}
+.rule{border-top:2px solid var(--accent);padding-top:10px}
+.rule b{display:block;font-size:26px;font-family:"Newsreader",Georgia,serif;font-weight:600;line-height:1.1}
+.rule span{color:var(--muted);font-size:13px}
+
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 18px;font-size:13px;color:var(--muted)}
+.chip{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;line-height:1.5;border:1px solid currentColor;min-width:52px;text-align:center}
+.t-class{color:var(--class)} .t-hw{color:var(--hw)} .t-exam{color:var(--exam)} .t-post,.t-reply{color:var(--post)} .t-admin{color:var(--muted)}
+.chip.t-hw{background:var(--hw);border-color:var(--hw);color:var(--surface)} .chip.t-exam{background:var(--exam);border-color:var(--exam);color:var(--surface)} .t-off{color:var(--muted)}
+
+.mod{display:grid;grid-template-columns:150px 1fr;gap:0 24px;padding:18px 0;border-top:1px solid var(--line)}
+.mod:last-child{border-bottom:1px solid var(--line)}
+.mod.past{opacity:.55}
+.mod.current{background:var(--today);margin:0 -16px;padding:18px 16px;border-radius:6px;border-top-color:transparent}
+.mod.current + .mod{border-top-color:transparent}
+@media(max-width:640px){.mod{grid-template-columns:1fr;gap:8px}}
+.when .n{font-family:"Newsreader",Georgia,serif;font-size:22px;font-weight:600;line-height:1}
+.when .n small{font-size:12px;font-family:"Public Sans",sans-serif;font-weight:600;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:4px}
+.when .range{color:var(--muted);font-size:12.5px;margin-top:6px}
+.mod h3{margin:0 0 10px;font-size:17px;font-weight:600;line-height:1.25}
+.items{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+.items li{display:grid;grid-template-columns:96px 58px 1fr;gap:10px;align-items:baseline;font-size:14px}
+@media(max-width:640px){.items li{grid-template-columns:82px 54px 1fr;gap:8px}}
+.items .d{color:var(--muted);font-size:12.5px}
+.items .note{color:var(--muted);font-size:12.5px}
+.items li.key .name{font-weight:600}
+.items li.optional{opacity:.6}
+.nothing{color:var(--muted);font-style:italic;font-size:14px}
+
+.big{margin:44px 0 0}
+.big table{width:100%;border-collapse:collapse;font-size:14px}
+.big th{text-align:left;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
+.big td{padding:9px 8px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.big td.w{text-align:right}
+.tblwrap{overflow-x:auto}
+.foot{margin-top:40px;color:var(--muted);font-size:13px;max-width:65ch}
+.foot p{margin:0 0 8px}
+a{color:var(--accent)}
+.zh{display:block;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-weight:500;font-size:.8em;color:var(--muted);margin-top:2px}
+.zh-h1{display:block;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-weight:500;font-size:.5em;color:var(--muted);margin-top:6px;letter-spacing:.02em}
+.card h2 .zh{display:inline;font-size:.75em;margin-left:6px}
+.br{display:block;content:"";margin-top:4px}
+@media (prefers-reduced-motion:no-preference){.mod{transition:opacity .2s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">George Mason · Fall 2026 · Section 001/DL1 · Dr. Sean Yun</div>
+  <h1>ECE 542 Semester Planner <span class="zh-h1">计算机网络体系结构与协议 · 学期计划</span></h1>
+  <p class="sub">Mondays 7:20–10:00 PM · Nguyen Engineering 2608 + Zoom · Aug 24 – Dec 7, 2026<br>周一晚 7:20–10:00 上课 · 16 周 · 每周作业在 Canvas 提交</p>
+
+  <div class="now">
+    <div class="card"><div class="eyebrow" id="todayLabel">Today</div><h2>This week <span class="zh">本周</span></h2><ul id="thisWeek"></ul></div>
+    <div class="card"><div class="eyebrow">Coming up · 接下来</div><h2>Exams <span class="zh">考试倒计时</span></h2><ul id="nextUp"></ul></div>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><b>10%</b><span>Weekly homework on Canvas. No late submissions accepted. Individual work only.<br class="br">每周作业，Canvas 提交。<strong style="font-weight:600;color:var(--exam)">不收迟交</strong>。必须独立完成。</span></div>
+    <div class="rule"><b>45%</b><span>Midterm — Mon Oct 12, in class. Closed book; one formula sheet + calculator allowed.<br class="br">期中 — 10 月 12 日（周一）随堂。闭卷，可带一页公式纸和计算器。</span></div>
+    <div class="rule"><b>45%</b><span>Final — Mon Dec 7, in class. Cumulative, closed book; one formula sheet + calculator.<br class="br">期末 — 12 月 7 日（周一）随堂。覆盖全部内容，闭卷，同样可带公式纸和计算器。</span></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="chip t-class">Class</span> 上课 · Monday 周一 7:20 PM</span>
+    <span><span class="chip t-hw">HW</span> 作业 · weekly on Canvas 每周</span>
+    <span><span class="chip t-exam">Exam</span> 考试</span>
+  </div>
+
+  <div id="modules"></div>
+
+  <div class="foot">
+    <p>Homework is assigned weekly on Canvas — check Canvas for each week's due date, since the syllabus doesn't fix them. Exams are cumulative, closed book, no electronic devices; non-emergency phone use during an exam is prohibited. Grading scale: A ≥93, A− 90–92, B+ 87–89, B 83–86, B− 80–82, C 70–79, F &lt;70.<br>作业每周在 Canvas 发布，截止日期以 Canvas 为准（大纲未固定）。考试累积、闭卷、禁用电子设备。教材：Leon-Garcia &amp; Widjaja, Communication Networks 2e。</p>
+  </div>
+</div>
+
+<script>
+const DATA = [{"m": 1, "start": "2026-08-24", "title": "Overview of communications networks and services (Ch. 1)", "zh": "通信网络与服务概览（第 1 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-08-24", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 2, "start": "2026-08-31", "title": "OSI and TCP/IP architectures (Ch. 2)", "zh": "OSI 与 TCP/IP 体系结构（第 2 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-08-31", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 3, "start": "2026-09-07", "title": "Digital communications: signals, A/D conversion, modulation (Ch. 3)", "zh": "数字通信基础：信号、模数转换、调制（第 3 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-09-07", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 4, "start": "2026-09-14", "title": "Digital communications: transmission media, error control (Ch. 3)", "zh": "数字通信基础：传输介质与差错控制（第 3 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-09-14", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 5, "start": "2026-09-21", "title": "Circuit switching: multiplexing (Ch. 4)", "zh": "电路交换：复用（第 4 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-09-21", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 6, "start": "2026-09-28", "title": "Circuit switching: SONET, cellular networks (Ch. 4)", "zh": "电路交换：同步光网络与蜂窝网络（第 4 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-09-28", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 7, "start": "2026-10-05", "title": "Error recovery and data link protocols: ARQ (Ch. 5)", "zh": "差错恢复与数据链路层协议：ARQ（第 5 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-10-05", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 8, "start": "2026-10-12", "title": "MIDTERM EXAM", "zh": "期中考试", "items": [{"t": "exam", "n": "Midterm Exam", "d": "2026-10-12", "note": "45% of grade · in class 7:20 PM · closed book, 1 formula sheet"}]}, {"m": 9, "start": "2026-10-19", "title": "Error recovery and data link protocols: data link control (Ch. 5)", "zh": "差错恢复与数据链路层协议：链路控制（第 5 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-10-19", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 10, "start": "2026-10-26", "title": "MAC protocols and LAN standards: random/controlled access (Ch. 6)", "zh": "MAC 协议与局域网标准:随机/受控接入（第 6 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-10-26", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 11, "start": "2026-11-02", "title": "No Classes (Election Day)", "zh": "停课（选举日）", "items": [{"t": "off", "n": "No class — Election Day", "d": "2026-11-02", "note": ""}]}, {"m": 12, "start": "2026-11-09", "title": "MAC protocols and LAN standards: channelization, LAN standards (Ch. 6)", "zh": "MAC 协议与局域网标准：信道化（第 6 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-11-09", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 13, "start": "2026-11-16", "title": "Packet switching and virtual circuit switching (Ch. 7)", "zh": "分组交换与虚电路交换（第 7 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-11-16", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 14, "start": "2026-11-23", "title": "TCP/IP architecture: IP and subnet addressing (Ch. 8)", "zh": "TCP/IP 体系结构：IP 与子网编址（第 8 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-11-23", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 15, "start": "2026-11-30", "title": "TCP/IP: IP routing (Ch. 8)", "zh": "TCP/IP：IP 路由（第 8 章）", "items": [{"t": "class", "n": "Class meeting", "d": "2026-11-30", "note": "Mon 7:20–10:00 PM · Nguyen 2608 / Zoom"}]}, {"m": 16, "start": "2026-12-07", "title": "FINAL EXAM", "zh": "期末考试", "items": [{"t": "exam", "n": "Final Exam", "d": "2026-12-07", "note": "45% of grade · in class 7:20 PM · closed book, cumulative"}]}];
+const TYPE = {class:"Class",hw:"HW",exam:"Exam",off:"—"};
+const TYPEZH = {class:"上课",hw:"作业",exam:"考试",off:"停课"};
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], DAYZH=["周日","周一","周二","周三","周四","周五","周六"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const p = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const fmt = s => { const d=p(s); return `${DAYS[d.getDay()]} ${MON[d.getMonth()]} ${d.getDate()}`; };
+const short = s => { const d=p(s); return `${MON[d.getMonth()]} ${d.getDate()}`; };
+const today = new Date(); today.setHours(0,0,0,0);
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const todayS = ymd(today);
+document.getElementById("todayLabel").textContent = "Today 今天 · " + fmt(todayS) + " " + DAYZH[today.getDay()];
+
+const modsEl = document.getElementById("modules");
+DATA.forEach((m,i) => {
+  const start = p(m.start); const end = new Date(start); end.setDate(end.getDate()+6);
+  const state = (today>=start && today<=end) ? "current" : (today>end ? "past" : "");
+  const items = m.items.map(it => `<li class="${["exam"].includes(it.t)?"key":""}">
+      <span class="d mono">${fmt(it.d)}</span>
+      <span class="chip t-${it.t}">${TYPE[it.t]}</span>
+      <span><span class="name">${it.n}</span> <span class="note">${TYPEZH[it.t]}${it.note?` · ${it.note}`:""}</span></span></li>`).join("");
+  modsEl.insertAdjacentHTML("beforeend", `
+    <div class="mod ${state}">
+      <div class="when"><div class="n"><small>Week 周</small>${m.m}</div>
+        <div class="range mono">${short(m.start)} – ${short(ymd(end))}</div></div>
+      <div><h3>${m.title}<span class="zh">${m.zh}</span></h3><ul class="items">${items}</ul></div>
+    </div>`);
+});
+
+const wk = DATA.filter(m => {const s=p(m.start),e=new Date(s);e.setDate(e.getDate()+6);return today>=s&&today<=e;})
+  .flatMap(m=>m.items);
+document.getElementById("thisWeek").innerHTML = wk.length
+  ? wk.map(it => `<li><span class="d mono">${fmt(it.d)}</span><span class="chip t-${it.t}">${TYPE[it.t]}</span><span>${it.n}</span></li>`).join("") + `<li><span class="d mono"></span><span class="chip t-hw">HW</span><span>Check Canvas for this week's homework 记得查看 Canvas 作业</span></li>`
+  : `<li class="empty">Semester not in session. 不在学期内。</li>`;
+
+const exams = DATA.flatMap(m=>m.items).filter(it=>it.t==="exam" && it.d>=todayS);
+document.getElementById("nextUp").innerHTML = exams.length ? exams.map(it => {
+  const days = Math.round((p(it.d)-today)/86400000);
+  return `<li><span class="d mono">${fmt(it.d)}</span><span class="chip t-exam">Exam</span><span>${it.n} <span class="note" style="color:var(--muted);font-size:12.5px">· ${days===0?"today 今天":"in "+days+" days · 还有 "+days+" 天"}</span></span></li>`;
+}).join("") : `<li class="empty">All exams done. 考完了。</li>`;
+</script>
+</body>
+</html>
